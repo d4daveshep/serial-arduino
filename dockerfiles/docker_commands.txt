@@ -1,0 +1,18 @@
+#run docker image with terminal output and giving access to a serial device
+docker run -t --device=/dev/ttyACM0 daveshep/serialread:v2
+
+# log in to the Docker hub
+docker login #username=daveshep pwd=docker4dave
+
+# push a docker image to the Docker hub
+docker push daveshep/serialread:v2
+
+# build a docker image with specified tag using the Dockerfile in current
+# directory
+docker build -t daveshep/serialread:v2 .
+
+# remove all docker volumes to free up inodes
+docker rm -f $(docker ps -a -q)
+
+
+
