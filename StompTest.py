@@ -1,0 +1,10 @@
+from stomp import *
+#c = Connection([('54.201.254.241', 61613)],auto_content_length=False)
+c = Connection([('localhost', 61613)],auto_content_length=False)
+c.set_listener('', PrintingListener())
+c.start()
+c.connect()
+#c.subscribe('/queue/test-queue', 123)
+#c.send('/queue/test-queue', 'a test message from StompTest.py')
+c.send('/queue/local', 'a test message from StompTest.py', headers={'persistent': 'true'})
+c.disconnect()
