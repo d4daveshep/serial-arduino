@@ -1,0 +1,5 @@
+To use stomp.py client (rather than stompy)...
+
+upgrade to python 3.5 via aptitude
+install python3-pip via aptitude
+install stomp with 'python3.5 -m pip install stomp'
