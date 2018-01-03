@@ -1,3 +1,7 @@
 #!/bin/bash
-SERIAL=/home/pi/serial-arduino
-pgrep -f SerialReadToStomp.py || python3 $SERIAL/SerialReadToStomp.py > $SERIAL/fermenter.log &
+DIR=/home/pi/development/serial-arduino
+SCRIPT=SerialReadToElastic.py
+LOG=elastic.log
+
+# run the above script if it's not running
+pgrep -f $SCRIPT || nohup python3 $DIR/$SCRIPT > $DIR/$LOG
