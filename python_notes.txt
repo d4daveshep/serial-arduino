@@ -1,4 +1,4 @@
 To install python modules...
-ensure debian package 'python3-pip' in installed
-install python modules with
+1. ensure debian package 'python3-pip' in installed
+2. install python modules with
 	python3 -m pip install <module>
