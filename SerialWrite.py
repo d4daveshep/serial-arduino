@@ -3,6 +3,7 @@
 import serial
 import glob
 import sys
+import time
 
 ttylist = glob.glob('/dev/ttyACM*')
 if len(ttylist) == 0:
@@ -16,6 +17,8 @@ tty = ttylist[0]
 print( 'INFO: Using Arduino device at ' + tty )
 
 ser = serial.Serial(tty, 9600)
+
+time.sleep(30) # sleep for 30 secs to allow arduino to reboot
 
 ser.write(b'<23.4>')
 #ser.write(b'<david>')

@@ -38,6 +38,10 @@ ser = serial.Serial(tty, 9600)
 
 time.sleep(30) # sleep for 30 secs to allow arduino to reboot
 
+# TODO: fix this up
+ser.write(b'<23.4>') # update the target temp
+
+
 while True:
     line = ser.readline() # read serial line as bytes
 #    print(line.decode('utf-8'))
