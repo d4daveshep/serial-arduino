@@ -1,20 +1,10 @@
 # simulate fermentation readings
 
-#from stompy.simple import Client
-from stomp import *
 from datetime import datetime
 import random
 from array import array
 import time
 import json
-
-# open the JMS Client using STOMP protocol
-# auto_content_length=False sets the message type to TextMessage
-#stomp = Connection([('54.201.254.241', 61613)],auto_content_length=False)
-stomp = Connection([('localhost', 61613)],auto_content_length=False)
-stomp.set_listener('', PrintingListener())
-stomp.start()
-stomp.connect()
 
 N = 50 # number of readings to take an average of
 readings = array('f') # the array of readings
@@ -39,8 +29,7 @@ index = 0 # pointer to current reading
 
 while True:
 #    stamp = datetime.now().__str__() # get timestamp
-    stamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.0')
-
+    stamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.0+13')
 
     newtemp = random.uniform(target-5,target+5) # get a new random temp
     oldtemp = readings[index] # remember the temp being replaced by new one
@@ -54,6 +43,21 @@ while True:
     if average > max:
         max = average
 
+    # determine the action
+    action = 'Rest'
+    rest = True
+    heat = False
+    cool = False
+    
+    if average < (target-0.3):
+        action = 'Heat'
+        heat = True
+        rest = False
+    if average > (target+0.3):
+        action = 'Cool'
+        cool = True
+        rest = False
+
     #print round(average, 2), round(min,2), round(max,2)
 
     index += 1 # increment the index
@@ -61,13 +65,29 @@ while True:
         index=0
 
     # build json
-    msg = {'avg': round(average,2), 'target': round(target,2), 'min': round(min,2), 'max': round(max,2), 'timestamp': stamp, 'brewid': '99-test-99' }
-    print( json.dumps(msg))
+    msg = {
+        'avg': round(average,2), 
+        'action': action, 
+        'target': round(target,2), 
+        'min': round(min,2), 
+        'max': round(max,2), 
+        'timestamp': stamp, 
+        'brewid': '99-test-99', 
+        'now': round(newtemp,2)
+    }
 
-    # put message on queue
-#    stomp.send('/queue/test-queue', json.dumps(msg), headers={'persistent': 'true'})
-    stomp.send('/queue/local', json.dumps(msg), headers={'persistent': 'true'})
+    # add action fields
+    if rest:
+        msg['rest'] = rest
+    if heat:
+        msg['heat'] = heat
+    if cool:
+        msg['cool'] = cool
 
-    time.sleep(60) # sleep for 1 sec
+    data = json.dumps(msg)
+    print(data)
+
+#    time.sleep(60) # sleep for 1 min
+    time.sleep(1)
 
     
