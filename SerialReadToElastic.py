@@ -39,8 +39,8 @@ ser = serial.Serial(tty, 9600)
 time.sleep(30) # sleep for 30 secs to allow arduino to reboot
 
 # TODO: fix this up
-ser.write(b'<23.4>') # update the target temp
-
+#ser.write(b'<23.4>') # update the target temp
+newTarget = 23.4
 
 while True:
     line = ser.readline() # read serial line as bytes
@@ -51,6 +51,14 @@ while True:
     data['timestamp'] = stamp.strftime('%Y-%m-%dT%H:%M:%S.0+13')
 #    data['brewid'] = '12-AAA-02'
     data['brewid'] = '99-TEST-99'
+
+    target = data['target']
+    if target != newTarget:
+        print( 'target temp ' + str(target) )
+        newTargetString = '<' + str(newTarget) + '>'
+        ser.write(newTargetString.encode())
+        print( 'updated target temp to ' + str(newTarget) )
+    
 
     doc = data
     print( json.dumps(doc) )
