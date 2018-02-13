@@ -5,21 +5,32 @@ import json
 import glob
 from datetime import datetime
 import time
+import configparser
 import elasticsearch
 from elasticsearch import Elasticsearch
+import sys
+import argparse
+from pathlib import Path
+
+# set up the command line parser
+parser = argparse.ArgumentParser()
+
+# define the argument to set the config file
+parser.add_argument("config_file", help="specify the full location of the config file")
+
+# parse the arguments and check the file exists
+args = parser.parse_args()
+
+if args.config_file :
+    cfgFile = args.config_file
+    print('config file is at...', cfgFile)
+
+    if not Path(cfgFile).exists() :
+        print('file NOT found... exiting')
+        sys.exit()
 
 # connect to Elasticsearch
 eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
-#es = Elasticsearch(
-#    hosts=[{'host':eshost, 'port':443}],
-#    use_ssl=True,
-#    verify_certs=True,
-#    sniff_on_start=True,
-#    sniffer_timeout=60,
-#    sniff_on_connection_fail=True,
-#    connection_class=elasticsearch.connection.RequestsHttpConnection
-#)
-#print( es.cluster.health() )
 
 # find the serial port
 ttylist = glob.glob('/dev/ttyACM*')
@@ -36,11 +47,15 @@ print( 'INFO: Using Arduino device at ' + tty )
 # open the serial port
 ser = serial.Serial(tty, 9600)
 
-time.sleep(30) # sleep for 30 secs to allow arduino to reboot
+# read the target temp from config file
+config = configparser.ConfigParser()
+config.read(cfgFile)
+newTarget = config['temperature']['TargetTemp']
+print('target temperature being set to ' + str(newTarget))
 
-# TODO: fix this up
-#ser.write(b'<23.4>') # update the target temp
-newTarget = 23.4
+time.sleep(30) # sleep for 30 secs to allow arduino to reboot
+newTargetString = '<' + str(newTarget) + '>'
+ser.write(newTargetString.encode())
 
 while True:
     line = ser.readline() # read serial line as bytes
