@@ -63,7 +63,7 @@ while True:
     data = json.loads(line.decode('utf-8')) # convert serial line to string and load to JSON
     stamp = datetime.now() # get timestamp and format with 0 millisecs
 
-    data['timestamp'] = stamp.strftime('%Y-%m-%dT%H:%M:%S.0+13')
+    data['timestamp'] = stamp.strftime('%Y-%m-%dT%H:%M:%S.0+12') # don't forget to adjust for daylight saving time 
 #    data['brewid'] = '12-AAA-02'
     data['brewid'] = '99-TEST-99'
 
