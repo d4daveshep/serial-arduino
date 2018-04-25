@@ -10,7 +10,7 @@ from elasticsearch import Elasticsearch
 
 # Elasticsearch URL
 #eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
-eshost = '192.168.1.50'
+eshost = '192.168.1.55'
 
 N = 50 # number of readings to take an average of
 readings = array('f') # the array of readings

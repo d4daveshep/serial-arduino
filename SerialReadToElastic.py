@@ -31,7 +31,7 @@ if args.config_file :
 
 # connect to Elasticsearch
 #eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
-eshost = '192.168.1.50' #local test elastic instance
+eshost = '192.168.1.55' #local test elastic instance
 
 # find the serial port
 ttylist = glob.glob('/dev/ttyACM*')
