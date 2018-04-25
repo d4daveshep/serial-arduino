@@ -30,7 +30,8 @@ if args.config_file :
         sys.exit()
 
 # connect to Elasticsearch
-eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
+#eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
+eshost = '192.168.1.50' #local test elastic instance
 
 # find the serial port
 ttylist = glob.glob('/dev/ttyACM*')
@@ -79,16 +80,16 @@ while True:
     print( json.dumps(doc) )
 
     es = Elasticsearch(
-        hosts=[{'host':eshost, 'port':443}],
-        use_ssl=True,
-        verify_certs=True,
+        hosts=[{'host':eshost, 'port':9200}],
+ #       use_ssl=True,
+ #       verify_certs=True,
         connection_class=elasticsearch.connection.RequestsHttpConnection
     )
     
     # index the doc to elastic
     res = es.index( 
-        index="mapping-test", 
-        doc_type="brew-temp", 
+        index="brew-temp", 
+        doc_type="temp-reading", 
         body=doc
     )
     print(json.dumps(res))

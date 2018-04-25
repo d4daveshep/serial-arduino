@@ -9,7 +9,8 @@ import elasticsearch
 from elasticsearch import Elasticsearch
 
 # Elasticsearch URL
-eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
+#eshost = 'search-test-fermenter-temp-ac27nb3jxwgsv6m6zfpjpsprsa.us-west-2.es.amazonaws.com' 
+eshost = '192.168.1.50'
 
 N = 50 # number of readings to take an average of
 readings = array('f') # the array of readings
@@ -34,7 +35,7 @@ index = 0 # pointer to current reading
 
 while True:
 #    stamp = datetime.now().__str__() # get timestamp
-    stamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.0+13')
+    stamp = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.0+12')
 
     newtemp = random.uniform(target-5,target+5) # get a new random temp
     oldtemp = readings[index] # remember the temp being replaced by new one
@@ -94,16 +95,16 @@ while True:
 
     # open a connection to elastic
     es = Elasticsearch(
-        hosts=[{'host':eshost, 'port':443}],
-        use_ssl=True,
-        verify_certs=True,
+        hosts=[{'host':eshost, 'port':9200}],
+#        use_ssl=True,
+#        verify_certs=True,
         connection_class=elasticsearch.connection.RequestsHttpConnection
     )
 
     # index the doc to elastic
     res = es.index( 
-        index="simulation", 
-        doc_type="brew-temp", 
+        index="brew-temp", 
+        doc_type="temp-reading", 
         body=data
     )
     print(json.dumps(res))
